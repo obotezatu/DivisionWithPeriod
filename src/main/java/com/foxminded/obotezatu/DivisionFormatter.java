@@ -1,6 +1,5 @@
 package com.foxminded.obotezatu;
 
-import java.util.Iterator;
 import java.util.ListIterator;
 
 public class DivisionFormatter {
@@ -12,30 +11,64 @@ public class DivisionFormatter {
 		StringBuilder formattedResult = new StringBuilder();
 		ListIterator<Step> stepsIterator = divisionResult.getSteps().listIterator();
 		ListIterator<Step> stepsDecimalIterator = divisionResult.getDecimalStep().listIterator();
-		formattedResult.append(formatHead(divisionResult, stepsIterator))
+		formattedResult.append(formatHead(divisionResult, stepsIterator,stepsDecimalIterator))
 				.append(formatBody(stepsIterator, stepsDecimalIterator));
 		return formattedResult.toString();
 	}
 
-	private String formatHead(DivisionResult divisionResult, ListIterator<Step> stepsIterator) {
+	private String formatHead(DivisionResult divisionResult, ListIterator<Step> stepsIterator, ListIterator<Step> stepsDecimalIterator) {
 		int dividendLength = String.valueOf(divisionResult.getDividend()).length();
 		StringBuilder formattedResult = new StringBuilder();
 		Step currentStep = stepsIterator.next();
 		while (currentStep.getDividerMultiple() == 0 && stepsIterator.hasNext()) {
 			currentStep = stepsIterator.next();
 		}
-		formattedResult.append(String.format("_%" + dividendLength + "d | %d%n", divisionResult.getDividend(),
-				divisionResult.getDivider()));
-		if ((int)(Math.log10(currentStep.getPartialDividend()) + 1) > ((int)Math.log10(currentStep.getDividerMultiple())+ 1)) {
-			formattedResult
-				.append(String.format(" %s%-" + (dividendLength) + "d |--------%n"," ", currentStep.getDividerMultiple()));
+		int partialDividendLength = (int)Math.log10(currentStep.getPartialDividend()) + 1;
+		int dividerMultipleLength = currentStep.getDividerMultiple() != 0? (int)Math.log10(currentStep.getDividerMultiple())+ 1 : 1;
+//=============
+		if (currentStep.getDividerMultiple() == 0) {
+			currentStep = stepsDecimalIterator.next();
+			while (currentStep.getDividerMultiple() == 0 && stepsDecimalIterator.hasNext()) {
+				currentStep = stepsDecimalIterator.next();
+			}
+			dividerMultipleLength = currentStep.getDividerMultiple() != 0? (int)Math.log10(currentStep.getDividerMultiple())+ 1 : 1;
+			if (dividendLength < dividerMultipleLength) {
+				formattedResult.append(String.format("_%-" + dividerMultipleLength + "d | %d%n",
+						divisionResult.getDividend(), divisionResult.getDivider()));
+			}
+			else {
+				formattedResult.append(String.format("_%" + dividendLength + "d | %d%n", divisionResult.getDividend(),
+						divisionResult.getDivider()));
+			}
+			if (partialDividendLength > dividerMultipleLength) {
+				formattedResult.append(String.format(" %s%-" + (dividendLength - 1) + "d |--------%n", " ",
+						currentStep.getDividerMultiple()));
+			} else {
+				formattedResult.append(
+						String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
+			}
+
+			formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n",
+					countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
 		} else {
-			formattedResult
-				.append(String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
+//---------------------------	
+			if (dividendLength < dividerMultipleLength)
+				formattedResult.append(String.format("_%" + dividerMultipleLength + "d | %d%n",
+						divisionResult.getDividend(), divisionResult.getDivider()));
+			else
+				formattedResult.append(String.format("_%" + dividendLength + "d | %d%n", divisionResult.getDividend(),
+						divisionResult.getDivider()));
+			if (partialDividendLength > dividerMultipleLength) {
+				formattedResult.append(String.format(" %s%-" + (dividendLength - 1) + "d |--------%n", " ",
+						currentStep.getDividerMultiple()));
+			} else {
+				formattedResult.append(
+						String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
+			}
+
+			formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n",
+					countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
 		}
-		
-		formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n",
-				countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
 		return formattedResult.toString();
 	}
 
