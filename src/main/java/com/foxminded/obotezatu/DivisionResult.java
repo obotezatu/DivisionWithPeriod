@@ -34,12 +34,25 @@ public class DivisionResult {
 		this.steps = steps;
 	}
 
-	public long getResult() {
+	/*public long getResult() {
 		long result = 0;
 		for (Step step : steps) {
 			result = (result * 10) + step.getDivideResult();
 		}
 		return result;
+	}*/
+	public String getResult() {
+		long integerResult = 0;
+		long decimalResult =0;
+		StringBuilder result = new StringBuilder();
+		for (Step step : steps) {
+			integerResult = (integerResult * 10) + step.getDivideResult();
+		}
+		for (Step step : decimalStep) {
+			decimalResult = (decimalResult * 10) + step.getDivideResult();
+		}
+		result.append(integerResult).append(".").append(decimalResult);
+		return result.toString();
 	}
 
 	public List<Step> getDecimalStep() {

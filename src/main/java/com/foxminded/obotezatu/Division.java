@@ -25,7 +25,8 @@ public class Division {
 		}
 //---------------------------------------------------------------------------------------------
 		if(partialDividend>0) {
-			int decimalCount=10;
+			int decimalCount=5;
+			boolean probe = partialDividend !=0 || decimalCount<=0;
 			while (partialDividend !=0 && decimalCount>=0) {
 				partialDividend = partialDividend * 10;
 				long dividerMultiple = (partialDividend / divider) * divider;
@@ -37,6 +38,7 @@ public class Division {
 				}
 				partialDividend = partialDividend - dividerMultiple;
 				divisionResult.getDecimalStep().add(divisionStep);
+				decimalCount--;
 			}
 		}
 		return divisionResult;
