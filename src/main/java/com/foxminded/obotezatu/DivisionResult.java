@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DivisionResult {
-	
+
 	private long dividend;
 	private long divider;
 	private static int decimalDigits;
@@ -34,7 +34,7 @@ public class DivisionResult {
 	public void setSteps(List<Step> steps) {
 		this.steps = steps;
 	}
-	
+
 	public List<Step> getDecimalStep() {
 		return decimalStep;
 	}
@@ -42,7 +42,7 @@ public class DivisionResult {
 	public void setDecimalStep(List<Step> decimalStep) {
 		this.decimalStep = decimalStep;
 	}
-	
+
 	public static int getDecimalDigits() {
 		return decimalDigits;
 	}
@@ -53,7 +53,7 @@ public class DivisionResult {
 
 	public String getResult() {
 		long integerResult = 0;
-		long decimalResult =0;
+		long decimalResult = 0;
 		StringBuilder result = new StringBuilder();
 		for (Step step : steps) {
 			integerResult = (integerResult * 10) + step.getDivideResult();
@@ -64,15 +64,14 @@ public class DivisionResult {
 		result.append(integerResult).append(".").append(findDecimalPeriod(String.valueOf(decimalResult)));
 		return result.toString();
 	}
-	
-	public String findDecimalPeriod(String  decimalResult) {
+
+	public String findDecimalPeriod(String decimalResult) {
 		int beginIndex = 0;
 		while (countPeriod(decimalResult.substring(beginIndex)) == decimalResult.substring(beginIndex).length()) {
 			beginIndex++;
 		}
-		if (beginIndex != decimalResult.length()) {
-			int offset = countPeriod(decimalResult.substring(beginIndex));
-			 //setDecimalDigits(offset + beginIndex);
+		int offset = countPeriod(decimalResult.substring(beginIndex));
+		if ((offset == 1 && decimalResult.length() > 10) && beginIndex != decimalResult.length()) {
 			return String.format(decimalResult.substring(0, beginIndex) + "("
 					+ decimalResult.substring(beginIndex, beginIndex + offset) + ")");
 		} else {
@@ -101,5 +100,4 @@ public class DivisionResult {
 		return period;
 	}
 
-	
 }
