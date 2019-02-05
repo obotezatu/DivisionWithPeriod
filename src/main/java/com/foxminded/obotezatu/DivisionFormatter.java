@@ -95,7 +95,9 @@ public class DivisionFormatter {
 			}
 		}
 
-		while (stepsDecimalIterator.hasNext()) {
+		//int i = DivisionResult.getDecimalDigits();
+		//currentStep = stepsDecimalIterator.next();
+		while (stepsDecimalIterator.hasNext() ) { //&& i>0
 			currentStep = stepsDecimalIterator.next();
 			if (currentStep.getPartialDividend() != 0 && currentStep.getDividerMultiple() != 0) {
 				formattedResult.append(String.format("%s_%s%n", indent.toString(), currentStep.getPartialDividend()));
@@ -112,9 +114,10 @@ public class DivisionFormatter {
 			} else {
 				indent.append(" ");
 			}
+			//i--;
 		}
 		formattedResult.append(
-				String.format("%s%d", indent, (currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
+				String.format(" %s%d", indent, (currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
 		return formattedResult.toString();
 	}
 

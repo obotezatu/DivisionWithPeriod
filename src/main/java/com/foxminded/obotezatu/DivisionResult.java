@@ -7,6 +7,7 @@ public class DivisionResult {
 	
 	private long dividend;
 	private long divider;
+	private static int decimalDigits;
 	private List<Step> steps = new ArrayList<>();
 	private List<Step> decimalStep = new ArrayList<>();
 
@@ -33,14 +34,23 @@ public class DivisionResult {
 	public void setSteps(List<Step> steps) {
 		this.steps = steps;
 	}
+	
+	public List<Step> getDecimalStep() {
+		return decimalStep;
+	}
 
-	/*public long getResult() {
-		long result = 0;
-		for (Step step : steps) {
-			result = (result * 10) + step.getDivideResult();
-		}
-		return result;
-	}*/
+	public void setDecimalStep(List<Step> decimalStep) {
+		this.decimalStep = decimalStep;
+	}
+	
+	public static int getDecimalDigits() {
+		return decimalDigits;
+	}
+
+	public void setDecimalDigits(int decimalDigits) {
+		this.decimalDigits = decimalDigits;
+	}
+
 	public String getResult() {
 		long integerResult = 0;
 		long decimalResult =0;
@@ -51,15 +61,45 @@ public class DivisionResult {
 		for (Step step : decimalStep) {
 			decimalResult = (decimalResult * 10) + step.getDivideResult();
 		}
-		result.append(integerResult).append(".").append(decimalResult);
+		result.append(integerResult).append(".").append(findDecimalPeriod(String.valueOf(decimalResult)));
 		return result.toString();
 	}
-
-	public List<Step> getDecimalStep() {
-		return decimalStep;
+	
+	public String findDecimalPeriod(String  decimalResult) {
+		int beginIndex = 0;
+		while (countPeriod(decimalResult.substring(beginIndex)) == decimalResult.substring(beginIndex).length()) {
+			beginIndex++;
+		}
+		if (beginIndex != decimalResult.length()) {
+			int offset = countPeriod(decimalResult.substring(beginIndex));
+			 //setDecimalDigits(offset + beginIndex);
+			return String.format(decimalResult.substring(0, beginIndex) + "("
+					+ decimalResult.substring(beginIndex, beginIndex + offset) + ")");
+		} else {
+			return decimalResult;
+		}
 	}
 
-	public void setDecimalStep(List<Step> decimalStep) {
-		this.decimalStep = decimalStep;
+	private int countPeriod(String inputString) {
+		int period;
+		String[] digits = inputString.split("");
+		period = digits.length;
+		for (int i = 1; i <= (digits.length / 2); i++) {
+			int j;
+			for (j = 0; j < digits.length - i;) {
+				if (digits[j].equals(digits[j + i])) {
+					j++;
+				} else {
+					break;
+				}
+			}
+			if (j == (digits.length - i)) {
+				period = i;
+				break;
+			}
+		}
+		return period;
 	}
+
+	
 }
