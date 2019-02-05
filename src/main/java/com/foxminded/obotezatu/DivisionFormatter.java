@@ -25,12 +25,12 @@ public class DivisionFormatter {
 		}
 		int partialDividendLength = (int)Math.log10(currentStep.getPartialDividend()) + 1;
 		int dividerMultipleLength = currentStep.getDividerMultiple() != 0? (int)Math.log10(currentStep.getDividerMultiple())+ 1 : 1;
-//=============
 		if (currentStep.getDividerMultiple() == 0) {
 			currentStep = stepsDecimalIterator.next();
 			while (currentStep.getDividerMultiple() == 0 && stepsDecimalIterator.hasNext()) {
 				currentStep = stepsDecimalIterator.next();
 			}
+		}
 			dividerMultipleLength = currentStep.getDividerMultiple() != 0? (int)Math.log10(currentStep.getDividerMultiple())+ 1 : 1;
 			if (dividendLength < dividerMultipleLength) {
 				formattedResult.append(String.format("_%-" + dividerMultipleLength + "d | %d%n",
@@ -47,28 +47,8 @@ public class DivisionFormatter {
 				formattedResult.append(
 						String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
 			}
-
 			formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n",
 					countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
-		} else {
-//---------------------------	
-			if (dividendLength < dividerMultipleLength)
-				formattedResult.append(String.format("_%" + dividerMultipleLength + "d | %d%n",
-						divisionResult.getDividend(), divisionResult.getDivider()));
-			else
-				formattedResult.append(String.format("_%" + dividendLength + "d | %d%n", divisionResult.getDividend(),
-						divisionResult.getDivider()));
-			if (partialDividendLength > dividerMultipleLength) {
-				formattedResult.append(String.format(" %s%-" + (dividendLength - 1) + "d |--------%n", " ",
-						currentStep.getDividerMultiple()));
-			} else {
-				formattedResult.append(
-						String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
-			}
-
-			formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n",
-					countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
-		}
 		return formattedResult.toString();
 	}
 
