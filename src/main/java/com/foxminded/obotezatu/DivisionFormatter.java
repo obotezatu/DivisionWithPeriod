@@ -79,12 +79,10 @@ public class DivisionFormatter {
 				formattedResult.append(
 						String.format(" %s%s%n", indent.toString(), countDashes(currentStep.getPartialDividend())));
 				indent.append(countIndents(stepsIterator));
-			} else {
-				//indent.append(" ");
 			}
 		}
 		if (!stepsDecimalIterator.hasNext()) {
-			formattedResult.append(String.format("%s% d", indent,
+			formattedResult.append(String.format("%s% d", indent.toString(),
 					(currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
 		}
 		return formattedResult.toString();
@@ -108,8 +106,6 @@ public class DivisionFormatter {
 				formattedResult.append(
 						String.format(" %s%s%n", indent.toString(), countDashes(currentStep.getPartialDividend())));
 				indent.append(countIndents(stepsDecimalIterator));
-			} else {
-				//indent.append(" ");
 			}
 		}
 		if (currentStep != null) {
