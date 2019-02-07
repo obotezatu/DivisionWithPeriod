@@ -23,9 +23,9 @@ public class Division {
 			partialDividend = partialDividend - dividerMultiple;
 			divisionResult.getSteps().add(divisionStep);
 		}
-		if(partialDividend>0) {
-			long decimalCount=11;
-			while (partialDividend !=0 && decimalCount>=0) {
+		if (partialDividend > 0) {
+			long decimalCount = 11;
+			while (partialDividend != 0 && decimalCount >= 0) {
 				partialDividend = partialDividend * 10;
 				long dividerMultiple = (partialDividend / divider) * divider;
 				Step divisionStep = new Step();

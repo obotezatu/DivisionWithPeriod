@@ -152,7 +152,7 @@ public class DivisionFormatter {
 	private int getDecimalSize(DivisionResult divisionResult) {
 		int decimalSize = 0;
 		String[] digits = divisionResult.getResult().split("\\D");
-		for (int i = 1;i<digits.length; i++ ) {
+		for (int i = 1; i < digits.length; i++) {
 			decimalSize += digits[i].length();
 		}
 		return decimalSize;

@@ -41,7 +41,7 @@ public class DivisionResult {
 	public void setDecimalStep(List<Step> decimalStep) {
 		this.decimalStep = decimalStep;
 	}
-	
+
 	public String getResult() {
 		long integerResult = 0;
 		long decimalResult = 0;
@@ -62,7 +62,7 @@ public class DivisionResult {
 			beginIndex++;
 		}
 		int offset = countPeriod(decimalResult.substring(beginIndex));
-		if ((offset == 1 && decimalResult.length() < 10) ||  beginIndex == decimalResult.length()) {
+		if ((offset == 1 && decimalResult.length() < 10) || beginIndex == decimalResult.length()) {
 			return decimalResult;
 		} else {
 			return String.format(decimalResult.substring(0, beginIndex) + "("
