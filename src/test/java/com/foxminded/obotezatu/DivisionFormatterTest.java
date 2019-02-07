@@ -44,4 +44,27 @@ public class DivisionFormatterTest {
 		String expectedResult = "0";
 		assertEquals(expectedResult, divisionFormatter.format(division.divide(0, 4)));
 	}
+	
+	@Test
+	public void testRepeatedDecimalsWithoutPeriod() {
+		expected.append("_1236 | 125").append(lineSeparator()).append(" 1125 |--------").append(lineSeparator())
+				.append(" ---- | 9.888").append(lineSeparator()).append(" _1110").append(lineSeparator()).append("  1000")
+				.append(lineSeparator()).append("  ----").append(lineSeparator()).append("  _1100").append(lineSeparator())
+				.append("   1000").append(lineSeparator()).append("   ----").append(lineSeparator()).append("   _1000")
+				.append(lineSeparator()).append("    1000").append(lineSeparator()).append("    ----")
+				.append(lineSeparator()).append("        0");
+		assertEquals(expected.toString(), divisionFormatter.format(division.divide(1236, 125)));
+	}
+	
+	@Test
+	public void testRepeatedDecimalsWithPeriod() {
+		expected.append("_7  | 12").append(lineSeparator()).append(" 60 |--------").append(lineSeparator())
+				.append(" -- | 0.58(3)").append(lineSeparator()).append("_100").append(lineSeparator()).append("  96")
+				.append(lineSeparator()).append(" ---").append(lineSeparator()).append("  _40").append(lineSeparator())
+				.append("   36").append(lineSeparator()).append("   --").append(lineSeparator()).append("   _40")
+				.append(lineSeparator()).append("    36").append(lineSeparator()).append("    --")
+				.append(lineSeparator()).append("     4");
+		assertEquals(expected.toString(), divisionFormatter.format(division.divide(7, 12)));
+	}
+
 }

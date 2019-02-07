@@ -37,13 +37,13 @@ public class IntegerDivisionTest {
 	}
 	
 	@Test
-	public void testRepeatedWithoutPeriod() {
+	public void testRepeatedDecimalsWithoutPeriod() {
 		String actualDivisionResult = division.divide(1236, 125).getResult();
 		assertEquals("9.888", actualDivisionResult);
 	}
 	
 	@Test
-	public void testRepeatedWithPeriod() {
+	public void testRepeatedDecimalsWithPeriod() {
 		String actualDivisionResult = division.divide(7, 12).getResult();
 		assertEquals("0.58(3)", actualDivisionResult);
 		actualDivisionResult = division.divide(1000, 3).getResult();
