@@ -7,7 +7,6 @@ public class DivisionResult {
 
 	private long dividend;
 	private long divider;
-	private static int decimalDigits;
 	private List<Step> steps = new ArrayList<>();
 	private List<Step> decimalStep = new ArrayList<>();
 
@@ -42,15 +41,7 @@ public class DivisionResult {
 	public void setDecimalStep(List<Step> decimalStep) {
 		this.decimalStep = decimalStep;
 	}
-
-	public static int getDecimalDigits() {
-		return decimalDigits;
-	}
-
-	public void setDecimalDigits(int decimalDigits) {
-		this.decimalDigits = decimalDigits;
-	}
-
+	
 	public String getResult() {
 		long integerResult = 0;
 		long decimalResult = 0;
@@ -99,5 +90,4 @@ public class DivisionResult {
 		}
 		return period;
 	}
-
 }
