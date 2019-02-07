@@ -53,7 +53,8 @@ public class DivisionFormatter {
 		return formattedResult.toString();
 	}
 
-	private String formatBody(DivisionResult divisionResult, ListIterator<Step> stepsIterator, ListIterator<Step> stepsDecimalIterator) {
+	private String formatBody(DivisionResult divisionResult, ListIterator<Step> stepsIterator,
+			ListIterator<Step> stepsDecimalIterator) {
 		StringBuilder formattedResult = new StringBuilder();
 		StringBuilder indent = new StringBuilder(countIndents(stepsIterator));
 		return formattedResult.append(formateBodyInteger(indent, stepsIterator, stepsDecimalIterator))
@@ -88,7 +89,8 @@ public class DivisionFormatter {
 		return formattedResult.toString();
 	}
 
-	private String formatBodyDecimal(DivisionResult divisionResult, ListIterator<Step> stepsDecimalIterator, StringBuilder indent) {
+	private String formatBodyDecimal(DivisionResult divisionResult, ListIterator<Step> stepsDecimalIterator,
+			StringBuilder indent) {
 		Step currentStep = null;
 		StringBuilder formattedResult = new StringBuilder();
 		int decimalSize = getDecimalSize(divisionResult);
@@ -146,9 +148,13 @@ public class DivisionFormatter {
 				? partialDividentLength - ((long) (Math.log10(partialDividentLengthDiff) + 1))
 				: partialDividentLength;
 	}
-	
-	private int getDecimalSize (DivisionResult divisionResult) {
+
+	private int getDecimalSize(DivisionResult divisionResult) {
+		int decimalSize = 0;
 		String[] digits = divisionResult.getResult().split("\\D");
-		return digits[0].length() + digits[1].length();
+		for (int i = 1;i<digits.length; i++ ) {
+			decimalSize += digits[i].length();
+		}
+		return decimalSize;
 	}
 }

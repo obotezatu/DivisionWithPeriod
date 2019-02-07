@@ -62,11 +62,11 @@ public class DivisionResult {
 			beginIndex++;
 		}
 		int offset = countPeriod(decimalResult.substring(beginIndex));
-		if ((offset == 1 && decimalResult.length() > 10) && beginIndex != decimalResult.length()) {
+		if ((offset == 1 && decimalResult.length() < 10) ||  beginIndex == decimalResult.length()) {
+			return decimalResult;
+		} else {
 			return String.format(decimalResult.substring(0, beginIndex) + "("
 					+ decimalResult.substring(beginIndex, beginIndex + offset) + ")");
-		} else {
-			return decimalResult;
 		}
 	}
 
