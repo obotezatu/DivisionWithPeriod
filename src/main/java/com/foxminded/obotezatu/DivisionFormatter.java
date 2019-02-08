@@ -9,20 +9,20 @@ public class DivisionFormatter {
 			return "0";
 		}
 		StringBuilder formattedResult = new StringBuilder();
-		ListIterator<Step> stepsIterator = divisionResult.getSteps().listIterator();
+		ListIterator<Step> stepsIntegerIterator = divisionResult.getSteps().listIterator();
 		ListIterator<Step> stepsDecimalIterator = divisionResult.getDecimalStep().listIterator();
-		formattedResult.append(formatHead(divisionResult, stepsIterator, stepsDecimalIterator))
-				.append(formatBody(divisionResult, stepsIterator, stepsDecimalIterator));
+		formattedResult.append(formatHead(divisionResult, stepsIntegerIterator, stepsDecimalIterator))
+				.append(formatBody(divisionResult, stepsIntegerIterator, stepsDecimalIterator));
 		return formattedResult.toString();
 	}
-
-	private String formatHead(DivisionResult divisionResult, ListIterator<Step> stepsIterator,
+	
+	private String formatHead(DivisionResult divisionResult, ListIterator<Step> stepsIntegerIterator,
 			ListIterator<Step> stepsDecimalIterator) {
 		int dividendLength = String.valueOf(divisionResult.getDividend()).length();
 		StringBuilder formattedResult = new StringBuilder();
-		Step currentStep = stepsIterator.next();
-		while (currentStep.getDividerMultiple() == 0 && stepsIterator.hasNext()) {
-			currentStep = stepsIterator.next();
+		Step currentStep = stepsIntegerIterator.next();
+		while (currentStep.getDividerMultiple() == 0 && stepsIntegerIterator.hasNext()) {
+			currentStep = stepsIntegerIterator.next();
 		}
 		int partialDividendLength = (int) Math.log10(currentStep.getPartialDividend()) + 1;
 		if (currentStep.getDividerMultiple() == 0) {
@@ -53,24 +53,27 @@ public class DivisionFormatter {
 		return formattedResult.toString();
 	}
 
-	private String formatBody(DivisionResult divisionResult, ListIterator<Step> stepsIterator,
+	private String formatBody(DivisionResult divisionResult, ListIterator<Step> stepsIntegerIterator,
 			ListIterator<Step> stepsDecimalIterator) {
 		StringBuilder formattedResult = new StringBuilder();
-		StringBuilder indent = new StringBuilder(countIndents(stepsIterator));
-		return formattedResult.append(formateBodyInteger(indent, stepsIterator, stepsDecimalIterator))
-				.append(formatBodyDecimal(divisionResult, stepsDecimalIterator, indent)).toString();
-	}
-
-	private String formateBodyInteger(StringBuilder indent, ListIterator<Step> stepsIterator,
-			ListIterator<Step> stepsDecimalIterator) {
+		StringBuilder indent = new StringBuilder(countIndents(stepsIntegerIterator));
+		ListIterator<Step> stepsIterator = null;
+		int decimalSize = getDecimalStepsSize(divisionResult);
 		Step currentStep = null;
-		StringBuilder formattedResult = new StringBuilder();
-		while (stepsIterator.hasNext()) {
-			currentStep = stepsIterator.next();
+		while (stepsIntegerIterator.hasNext() || (stepsDecimalIterator.hasNext() && decimalSize > 0)) {
+			if (stepsIntegerIterator.hasNext()) {
+				currentStep = stepsIntegerIterator.next();
+				stepsIterator = stepsIntegerIterator;
+			} else {
+				currentStep = stepsDecimalIterator.next();
+				stepsIterator = stepsDecimalIterator;
+				decimalSize--;
+			}
+			int partialDividentLength = String.valueOf(currentStep.getPartialDividend()).length();
+			int dividerMultipleLength = String.valueOf(currentStep.getDividerMultiple()).length();
 			if (currentStep.getPartialDividend() != 0 && currentStep.getDividerMultiple() != 0) {
 				formattedResult.append(String.format("%s_%s%n", indent.toString(), currentStep.getPartialDividend()));
-				if ((int) (Math.log10(currentStep.getPartialDividend())
-						+ 1) > ((int) Math.log10(currentStep.getDividerMultiple()) + 1)) {
+				if (partialDividentLength > dividerMultipleLength) {
 					formattedResult.append(
 							String.format("%s%s% d%n", indent.toString(), " ", currentStep.getDividerMultiple()));
 				} else {
@@ -82,38 +85,8 @@ public class DivisionFormatter {
 				indent.append(countIndents(stepsIterator));
 			}
 		}
-		if (!stepsDecimalIterator.hasNext()) {
+		if (!stepsDecimalIterator.hasNext() || currentStep != null) {
 			formattedResult.append(String.format("%s% d", indent.toString(),
-					(currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
-		}
-		return formattedResult.toString();
-	}
-
-	private String formatBodyDecimal(DivisionResult divisionResult, ListIterator<Step> stepsDecimalIterator,
-			StringBuilder indent) {
-		Step currentStep = null;
-		StringBuilder formattedResult = new StringBuilder();
-		int decimalSize = getDecimalSize(divisionResult);
-		while (stepsDecimalIterator.hasNext() && decimalSize > 0) {
-			currentStep = stepsDecimalIterator.next();
-			if (currentStep.getPartialDividend() != 0 && currentStep.getDividerMultiple() != 0) {
-				formattedResult.append(String.format("%s_%s%n", indent.toString(), currentStep.getPartialDividend()));
-				if ((int) (Math.log10(currentStep.getPartialDividend())
-						+ 1) > ((int) Math.log10(currentStep.getDividerMultiple()) + 1)) {
-					formattedResult.append(
-							String.format("%s%s% d%n", indent.toString(), " ", currentStep.getDividerMultiple()));
-				} else {
-					formattedResult
-							.append(String.format("%s% d%n", indent.toString(), currentStep.getDividerMultiple()));
-				}
-				formattedResult.append(
-						String.format(" %s%s%n", indent.toString(), countDashes(currentStep.getPartialDividend())));
-				indent.append(countIndents(stepsDecimalIterator));
-			}
-			decimalSize--;
-		}
-		if (currentStep != null) {
-			formattedResult.append(String.format(" %s%d", indent.toString(),
 					(currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
 		}
 		return formattedResult.toString();
@@ -128,11 +101,11 @@ public class DivisionFormatter {
 		return dashes.toString();
 	}
 
-	private String countIndents(ListIterator<Step> stepsIterator) {
+	private String countIndents(ListIterator<Step> stepsIntegerIterator) {
 		StringBuilder indent = new StringBuilder();
-		if (stepsIterator.hasPrevious()) {
-			stepsIterator.previous();
-			Step currentStep = stepsIterator.next();
+		if (stepsIntegerIterator.hasPrevious()) {
+			stepsIntegerIterator.previous();
+			Step currentStep = stepsIntegerIterator.next();
 			long indentCount = countDigits(currentStep);
 			for (int i = 0; i < indentCount; i++) {
 				indent.append(" ");
@@ -149,7 +122,7 @@ public class DivisionFormatter {
 				: partialDividentLength;
 	}
 
-	private int getDecimalSize(DivisionResult divisionResult) {
+	private int getDecimalStepsSize(DivisionResult divisionResult) {
 		int decimalSize = 0;
 		String[] digits = divisionResult.getResult().split("\\D");
 		for (int i = 1; i < digits.length; i++) {

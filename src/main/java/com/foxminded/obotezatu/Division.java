@@ -11,33 +11,31 @@ public class Division {
 		divisionResult.setDivider(divider);
 		long[] dividendDigits = splitDividend(dividend);
 		long partialDividend = 0;
-		for (long digit : dividendDigits) {
-			partialDividend = partialDividend * 10 + digit;
+		int decimalCount = 11;
+		int integerCount = 0;
+		long divisionStepsCount = dividendDigits.length + decimalCount;
+		 while ((integerCount < dividendDigits.length || partialDividend != 0) && divisionStepsCount >= 0){
+			if (integerCount < dividendDigits.length) {
+				partialDividend = partialDividend * 10 + dividendDigits[integerCount];
+			} else {
+				partialDividend = partialDividend * 10;
+			}
 			long dividerMultiple = (partialDividend / divider) * divider;
 			Step divisionStep = new Step();
-			if (dividerMultiple != 0 || digit == dividendDigits[dividendDigits.length - 1]) {
+			if (dividerMultiple != 0) {
 				divisionStep.setDivideResult(partialDividend / divider);
 				divisionStep.setPartialDividend(partialDividend);
 				divisionStep.setDividerMultiple(dividerMultiple);
 			}
 			partialDividend = partialDividend - dividerMultiple;
-			divisionResult.getSteps().add(divisionStep);
-		}
-		if (partialDividend > 0) {
-			long decimalCount = 11;
-			while (partialDividend != 0 && decimalCount >= 0) {
-				partialDividend = partialDividend * 10;
-				long dividerMultiple = (partialDividend / divider) * divider;
-				Step divisionStep = new Step();
-				if (dividerMultiple != 0) {
-					divisionStep.setDivideResult(partialDividend / divider);
-					divisionStep.setPartialDividend(partialDividend);
-					divisionStep.setDividerMultiple(dividerMultiple);
-				}
-				partialDividend = partialDividend - dividerMultiple;
+			if (integerCount < dividendDigits.length) {
+				divisionResult.getSteps().add(divisionStep);
+			} else {
 				divisionResult.getDecimalStep().add(divisionStep);
-				decimalCount--;
 			}
+			decimalCount--;
+			integerCount++;
+			divisionStepsCount--;
 		}
 		return divisionResult;
 	}
@@ -45,9 +43,10 @@ public class Division {
 	private long[] splitDividend(long dividend) {
 		int dividendLength = String.valueOf(dividend).length();
 		long[] dividendDigits = new long[dividendLength];
+		long dividendRest = dividend;
 		for (int i = dividendLength - 1; i >= 0; i--) {
-			dividendDigits[i] = dividend % 10;
-			dividend = dividend / 10;
+			dividendDigits[i] = dividendRest % 10;
+			dividendRest = dividendRest / 10;
 		}
 		return dividendDigits;
 	}
