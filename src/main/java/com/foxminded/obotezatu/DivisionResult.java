@@ -8,7 +8,7 @@ public class DivisionResult {
 	private long dividend;
 	private long divider;
 	private List<Step> steps = new ArrayList<>();
-	private List<Step> decimalStep = new ArrayList<>();
+	//private List<Step> decimalStep = new ArrayList<>();
 
 	public long getDividend() {
 		return dividend;
@@ -34,29 +34,40 @@ public class DivisionResult {
 		this.steps = steps;
 	}
 
-	public List<Step> getDecimalStep() {
+	/*public List<Step> getDecimalStep() {
 		return decimalStep;
 	}
 
 	public void setDecimalStep(List<Step> decimalStep) {
 		this.decimalStep = decimalStep;
-	}
+	}*/
 
-	public String getResult() {
-		long integerResult = 0;
-		long decimalResult = 0;
-		StringBuilder result = new StringBuilder();
+	public double getResult() {
+		//long integerResult = 0;		
+		//long decimalResult = 0;
+		long integerCount = String.valueOf(dividend).length();
+		long decimalCount = 10;
+		double result =0;
+		//StringBuilder result = new StringBuilder();
 		for (Step step : steps) {
-			integerResult = (integerResult * 10) + step.getDivideResult();
+			//integerResult = (integerResult * 10) + step.getDivideResult();
+			if (integerCount>0) {
+			result = (result * 10) + step.getDivideResult();
+			}else {
+				result = result  + ((double) step.getDivideResult() / decimalCount);
+				decimalCount *= 10;
+			}
+			integerCount--;
 		}
-		for (Step step : decimalStep) {
+		/*for (Step step : decimalStep) {
 			decimalResult = (decimalResult * 10) + step.getDivideResult();
 		}
 		result.append(integerResult).append(".").append(findDecimalPeriod(String.valueOf(decimalResult)));
-		return result.toString();
+		return result.toString();*/
+		return result;
 	}
 
-	public String findDecimalPeriod(String decimalResult) {
+	/*public String findDecimalPeriod(String decimalResult) {
 		int beginIndex = 0;
 		while (countPeriod(decimalResult.substring(beginIndex)) == decimalResult.substring(beginIndex).length()) {
 			beginIndex++;
@@ -89,5 +100,5 @@ public class DivisionResult {
 			}
 		}
 		return period;
-	}
+	}*/
 }

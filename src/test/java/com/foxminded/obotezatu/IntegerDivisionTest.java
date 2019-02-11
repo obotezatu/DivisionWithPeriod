@@ -18,7 +18,7 @@ public class IntegerDivisionTest {
 		division.divide(78945, 0);
 	}
 
-	@Test
+	/*@Test
 	public void testNumberDivision() {
 		String actualDivisionResult = division.divide(78945, 4).getResult();
 		assertEquals("19736.25", actualDivisionResult);
@@ -48,5 +48,5 @@ public class IntegerDivisionTest {
 		assertEquals("0.58(3)", actualDivisionResult);
 		actualDivisionResult = division.divide(1000, 3).getResult();
 		assertEquals("333.(3)", actualDivisionResult);
-	}
+	}*/
 }

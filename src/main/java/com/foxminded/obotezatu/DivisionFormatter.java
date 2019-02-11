@@ -10,14 +10,15 @@ public class DivisionFormatter {
 		}
 		StringBuilder formattedResult = new StringBuilder();
 		ListIterator<Step> stepsIntegerIterator = divisionResult.getSteps().listIterator();
-		ListIterator<Step> stepsDecimalIterator = divisionResult.getDecimalStep().listIterator();
-		formattedResult.append(formatHead(divisionResult, stepsIntegerIterator, stepsDecimalIterator))
-				.append(formatBody(divisionResult, stepsIntegerIterator, stepsDecimalIterator));
+		//ListIterator<Step> stepsDecimalIterator = divisionResult.getDecimalStep().listIterator();
+		/*formattedResult.append(formatHead(divisionResult, stepsIntegerIterator, stepsDecimalIterator))
+				.append(formatBody(divisionResult, stepsIntegerIterator, stepsDecimalIterator));*/
+		formattedResult.append(formatHead(divisionResult, stepsIntegerIterator))
+		.append(formatBody(divisionResult, stepsIntegerIterator));
 		return formattedResult.toString();
 	}
-	
-	private String formatHead(DivisionResult divisionResult, ListIterator<Step> stepsIntegerIterator,
-			ListIterator<Step> stepsDecimalIterator) {
+
+	private String formatHead(DivisionResult divisionResult, ListIterator<Step> stepsIntegerIterator) {
 		int dividendLength = String.valueOf(divisionResult.getDividend()).length();
 		StringBuilder formattedResult = new StringBuilder();
 		Step currentStep = stepsIntegerIterator.next();
@@ -25,12 +26,12 @@ public class DivisionFormatter {
 			currentStep = stepsIntegerIterator.next();
 		}
 		int partialDividendLength = (int) Math.log10(currentStep.getPartialDividend()) + 1;
-		if (currentStep.getDividerMultiple() == 0) {
+		/*if (currentStep.getDividerMultiple() == 0) {
 			currentStep = stepsDecimalIterator.next();
 			while (currentStep.getDividerMultiple() == 0 && stepsDecimalIterator.hasNext()) {
 				currentStep = stepsDecimalIterator.next();
 			}
-		}
+		}*/
 		int dividerMultipleLength = currentStep.getDividerMultiple() != 0
 				? (int) Math.log10(currentStep.getDividerMultiple()) + 1
 				: 1;
@@ -49,26 +50,25 @@ public class DivisionFormatter {
 					.append(String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
 		}
 		formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n",
-				countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
+				countDashes(currentStep.getPartialDividend()), findDecimalPeriod(divisionResult.getResult())));
 		return formattedResult.toString();
 	}
 
-	private String formatBody(DivisionResult divisionResult, ListIterator<Step> stepsIntegerIterator,
-			ListIterator<Step> stepsDecimalIterator) {
+	private String formatBody(DivisionResult divisionResult, ListIterator<Step> stepsIntegerIterator) {
 		StringBuilder formattedResult = new StringBuilder();
 		StringBuilder indent = new StringBuilder(countIndents(stepsIntegerIterator));
 		ListIterator<Step> stepsIterator = null;
-		int decimalSize = getDecimalStepsSize(divisionResult);
+		//int decimalSize = getDecimalStepsSize(divisionResult);
 		Step currentStep = null;
-		while (stepsIntegerIterator.hasNext() || (stepsDecimalIterator.hasNext() && decimalSize > 0)) {
-			if (stepsIntegerIterator.hasNext()) {
+		while (stepsIntegerIterator.hasNext()) {  //&& decimalSize > 0) {
+			//if (stepsIntegerIterator.hasNext()) {
 				currentStep = stepsIntegerIterator.next();
 				stepsIterator = stepsIntegerIterator;
-			} else {
+			/*} else {
 				currentStep = stepsDecimalIterator.next();
 				stepsIterator = stepsDecimalIterator;
 				decimalSize--;
-			}
+			}*/
 			int partialDividentLength = String.valueOf(currentStep.getPartialDividend()).length();
 			int dividerMultipleLength = String.valueOf(currentStep.getDividerMultiple()).length();
 			if (currentStep.getPartialDividend() != 0 && currentStep.getDividerMultiple() != 0) {
@@ -85,7 +85,7 @@ public class DivisionFormatter {
 				indent.append(countIndents(stepsIterator));
 			}
 		}
-		if (!stepsDecimalIterator.hasNext() || currentStep != null) {
+		if ( currentStep != null) {
 			formattedResult.append(String.format("%s% d", indent.toString(),
 					(currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
 		}
@@ -121,13 +121,56 @@ public class DivisionFormatter {
 				? partialDividentLength - ((long) (Math.log10(partialDividentLengthDiff) + 1))
 				: partialDividentLength;
 	}
+	
+	private String findDecimalPeriod(double result) {
+		int beginIndex = 0;
+		String[] resultParts = String.valueOf(result).split("\\.");
+		String integerResult = resultParts[0];
+		String decimalResult = resultParts[1];
+		while (countPeriod(decimalResult.substring(beginIndex)) == decimalResult.substring(beginIndex).length()) {
+			beginIndex++;
+		}
+		int offset = countPeriod(decimalResult.substring(beginIndex));
+		if ((offset == 1 && decimalResult.length() < 10) || beginIndex == decimalResult.length()) {
+			return String.valueOf(result);
+		} else {
+			/*String decimalParts = String.format(decimalResult.substring(0, beginIndex) + "("
+					+ decimalResult.substring(beginIndex, beginIndex + offset) + ")");*/
+			return String.format(integerResult + "." + decimalResult.substring(0, beginIndex) + "("
+					+ decimalResult.substring(beginIndex, beginIndex + offset) + ")");
+			/*StringBuilder resultWithPeriod = new StringBuilder();
+			return resultWithPeriod.append(integerResult).append(".").append(decimalParts).toString();*/
+		}
+	}
 
-	private int getDecimalStepsSize(DivisionResult divisionResult) {
+	private int countPeriod(String inputString) {
+		int period;
+		String[] digits = inputString.split("");
+		period = digits.length;
+		for (int i = 1; i <= (digits.length / 2); i++) {
+			int j;
+			for (j = 0; j < digits.length - i;) {
+				if (digits[j].equals(digits[j + i])) {
+					j++;
+				} else {
+					break;
+				}
+			}
+			if (j == (digits.length - i)) {
+				period = i;
+				break;
+			}
+		}
+		return period;
+	}
+
+
+	/*private int getDecimalStepsSize(DivisionResult divisionResult) {
 		int decimalSize = 0;
 		String[] digits = divisionResult.getResult().split("\\D");
 		for (int i = 1; i < digits.length; i++) {
 			decimalSize += digits[i].length();
 		}
 		return decimalSize;
-	}
+	}*/
 }
