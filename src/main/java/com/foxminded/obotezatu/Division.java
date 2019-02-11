@@ -11,10 +11,10 @@ public class Division {
 		divisionResult.setDivider(divider);
 		long[] dividendDigits = splitDividend(dividend);
 		long partialDividend = 0;
-		int decimalCount = 10;
+		int decimalCount = 15;
 		int integerCount = 0;
 		long divisionStepsCount = dividendDigits.length + decimalCount;
-		while ((integerCount < dividendDigits.length || partialDividend != 0) && divisionStepsCount >= 0) {
+		while (divisionStepsCount > 0) {
 			if (integerCount < dividendDigits.length) {
 				partialDividend = partialDividend * 10 + dividendDigits[integerCount];
 			} else {
@@ -29,12 +29,6 @@ public class Division {
 			}
 			partialDividend = partialDividend - dividerMultiple;
 			divisionResult.getSteps().add(divisionStep);
-			/*if (integerCount < dividendDigits.length) {
-				divisionResult.getSteps().add(divisionStep);
-			} else {
-				divisionResult.getDecimalStep().add(divisionStep);
-			}*/
-			decimalCount--;
 			integerCount++;
 			divisionStepsCount--;
 		}
