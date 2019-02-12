@@ -18,35 +18,35 @@ public class IntegerDivisionTest {
 		division.divide(78945, 0);
 	}
 
-	/*@Test
+	@Test
 	public void testNumberDivision() {
-		String actualDivisionResult = division.divide(78945, 4).getResult();
-		assertEquals("19736.25", actualDivisionResult);
+		double actualDivisionResult = division.divide(78945, 4).getResult();
+		assertEquals(19736.25, actualDivisionResult, 0.0000000001);
 	}
 	
 	@Test
 	public void testThousandsDivision() {
-		String actualDivisionResult = division.divide(10000, 10).getResult();
-		assertEquals("1000.0", actualDivisionResult);
+		double actualDivisionResult = division.divide(10000, 10).getResult();
+		assertEquals(1000.0, actualDivisionResult, 0.0000000001);
 	}
 	
 	@Test
 	public void testSmallToBigDivision() {
-		String actualDivisionResult = division.divide(123, 456).getResult();
-		assertEquals("0.269736842105", actualDivisionResult);
+		double actualDivisionResult = division.divide(123, 456).getResult();
+		assertEquals(0.269736842105, actualDivisionResult, 0.0000000001);
 	}
 	
 	@Test
 	public void testRepeatedDecimalsWithoutPeriod() {
-		String actualDivisionResult = division.divide(1236, 125).getResult();
-		assertEquals("9.888", actualDivisionResult);
+		double actualDivisionResult = division.divide(1236, 125).getResult();
+		assertEquals(9.888, actualDivisionResult, 0.0000000001);
 	}
 	
 	@Test
 	public void testRepeatedDecimalsWithPeriod() {
-		String actualDivisionResult = division.divide(7, 12).getResult();
-		assertEquals("0.58(3)", actualDivisionResult);
+		double actualDivisionResult = division.divide(7, 12).getResult();
+		assertEquals(0.583333333333333, actualDivisionResult, 0.0000000001);
 		actualDivisionResult = division.divide(1000, 3).getResult();
-		assertEquals("333.(3)", actualDivisionResult);
-	}*/
+		assertEquals(333.333333333333333, actualDivisionResult, 0.0000000001);
+	}
 }

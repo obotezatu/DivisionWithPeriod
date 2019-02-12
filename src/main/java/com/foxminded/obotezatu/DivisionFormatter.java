@@ -1,6 +1,8 @@
 package com.foxminded.obotezatu;
 
 import java.util.ListIterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DivisionFormatter {
 
@@ -50,7 +52,8 @@ public class DivisionFormatter {
 		StringBuilder indent = new StringBuilder(countIndents(stepsIntegerIterator));
 		ListIterator<Step> stepsIterator = null;
 		Step currentStep = null;
-		while (stepsIntegerIterator.hasNext()) {
+		int resultSize = getResultSize(findDecimalPeriod(divisionResult.getResult()));
+		while (stepsIntegerIterator.hasNext() && resultSize > 0) {
 			currentStep = stepsIntegerIterator.next();
 			stepsIterator = stepsIntegerIterator;
 			int partialDividentLength = String.valueOf(currentStep.getPartialDividend()).length();
@@ -68,6 +71,7 @@ public class DivisionFormatter {
 						String.format(" %s%s%n", indent.toString(), countDashes(currentStep.getPartialDividend())));
 				indent.append(countIndents(stepsIterator));
 			}
+			resultSize--;
 		}
 		if (currentStep != null) {
 			formattedResult.append(String.format("%s% d", indent.toString(),
@@ -142,5 +146,17 @@ public class DivisionFormatter {
 			}
 		}
 		return period;
+	}
+
+	private int getResultSize(String result) {
+
+		String resultSize = "";
+		Pattern pattern = Pattern.compile("\\d+");
+		Matcher matcher = pattern.matcher(result);
+
+		while (matcher.find()) {
+			resultSize += matcher.group();
+		}
+		return resultSize.length();
 	}
 }

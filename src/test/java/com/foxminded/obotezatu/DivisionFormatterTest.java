@@ -65,7 +65,9 @@ public class DivisionFormatterTest {
 				.append(lineSeparator()).append(" ---").append(lineSeparator()).append("  _40").append(lineSeparator())
 				.append("   36").append(lineSeparator()).append("   --").append(lineSeparator()).append("   _40")
 				.append(lineSeparator()).append("    36").append(lineSeparator()).append("    --")
-				.append(lineSeparator()).append("     4");
+				.append(lineSeparator()).append("    _40").append(lineSeparator()).append("     36")
+				.append(lineSeparator()).append("     --").append(lineSeparator()).append("      4");
+		;
 		assertEquals(expected.toString(), divisionFormatter.format(division.divide(7, 12)));
 	}
 
