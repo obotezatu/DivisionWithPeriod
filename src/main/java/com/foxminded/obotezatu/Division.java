@@ -11,9 +11,9 @@ public class Division {
 		divisionResult.setDivider(divider);
 		long[] dividendDigits = splitDividend(dividend);
 		long partialDividend = 0;
-		int decimalCount = 15;
+		int decimalSize = 15;
 		int integerCount = 0;
-		long divisionStepsCount = dividendDigits.length + decimalCount;
+		long divisionStepsCount = dividendDigits.length + decimalSize;
 		while (divisionStepsCount > 0) {
 			if (integerCount < dividendDigits.length) {
 				partialDividend = partialDividend * 10 + dividendDigits[integerCount];

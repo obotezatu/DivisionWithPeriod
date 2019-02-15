@@ -23,25 +23,25 @@ public class IntegerDivisionTest {
 		double actualDivisionResult = division.divide(78945, 4).getResult();
 		assertEquals(19736.25, actualDivisionResult, 0.0000000001);
 	}
-	
+
 	@Test
 	public void testThousandsDivision() {
 		double actualDivisionResult = division.divide(10000, 10).getResult();
 		assertEquals(1000.0, actualDivisionResult, 0.0000000001);
 	}
-	
+
 	@Test
 	public void testSmallToBigDivision() {
 		double actualDivisionResult = division.divide(123, 456).getResult();
 		assertEquals(0.269736842105, actualDivisionResult, 0.0000000001);
 	}
-	
+
 	@Test
 	public void testRepeatedDecimalsWithoutPeriod() {
 		double actualDivisionResult = division.divide(1236, 125).getResult();
 		assertEquals(9.888, actualDivisionResult, 0.0000000001);
 	}
-	
+
 	@Test
 	public void testRepeatedDecimalsWithPeriod() {
 		double actualDivisionResult = division.divide(7, 12).getResult();

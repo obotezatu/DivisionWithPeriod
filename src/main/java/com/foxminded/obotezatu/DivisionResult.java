@@ -1,6 +1,7 @@
 package com.foxminded.obotezatu;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DivisionResult {
@@ -33,8 +34,35 @@ public class DivisionResult {
 		this.steps = steps;
 	}
 
-	public double getResult() {
-		long decimalResult = 0;
+	public String getResult() {
+		long numerator = getDividend();
+		long denominator = getDivider();
+		long integerPart =numerator /denominator;
+		String ans ="";
+		HashMap<Long, Integer> l = new HashMap<>();
+		int i=0;
+		numerator = numerator % denominator;
+		l.put(numerator,i);
+		i++;
+		if(numerator == 0) {
+			return String.valueOf(integerPart);
+		}
+		while(true) {
+			if(numerator == 0) {
+				return String.format("%d.%s", integerPart, ans);
+			}
+			long digit = (numerator*10) / denominator;
+			numerator = (numerator*10) % denominator;
+			ans += digit;
+			if (!l.containsKey(numerator)) {
+				l.put(numerator, i);
+				i++;
+			}else {
+				int val = l.get(numerator);
+				return String.format("%d.%s(%s)", integerPart, ans.substring(0, val), ans.substring(val));
+			}
+		}
+		/*long decimalResult = 0;
 		long integerCount = String.valueOf(dividend).length();
 		long decimalCount = 1;
 		double result = 0;
@@ -47,6 +75,6 @@ public class DivisionResult {
 				decimalCount *= 10;
 			}
 		}
-		return result + ((double) decimalResult / decimalCount);
+		return result + ((double) decimalResult / decimalCount);*/
 	}
 }

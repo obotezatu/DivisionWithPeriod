@@ -43,7 +43,7 @@ public class DivisionFormatter {
 					.append(String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
 		}
 		formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n",
-				countDashes(currentStep.getPartialDividend()), findDecimalPeriod(divisionResult.getResult())));
+				countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
 		return formattedResult.toString();
 	}
 
@@ -52,7 +52,7 @@ public class DivisionFormatter {
 		StringBuilder indent = new StringBuilder(countIndents(stepsIntegerIterator));
 		ListIterator<Step> stepsIterator = null;
 		Step currentStep = null;
-		int resultSize = getResultSize(findDecimalPeriod(divisionResult.getResult()));
+		int resultSize = getResultSize(divisionResult.getResult());
 		while (stepsIntegerIterator.hasNext() && resultSize > 0) {
 			currentStep = stepsIntegerIterator.next();
 			stepsIterator = stepsIntegerIterator;
