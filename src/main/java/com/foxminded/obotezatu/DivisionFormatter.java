@@ -29,21 +29,16 @@ public class DivisionFormatter {
 				? (int) Math.log10(currentStep.getDividerMultiple()) + 1
 				: 1;
 		if (dividendLength < dividerMultipleLength) {
-			formattedResult.append(String.format("_%-" + dividerMultipleLength + "d | %d%n",
-					divisionResult.getDividend(), divisionResult.getDivider()));
+			formattedResult.append(String.format("_%-" + dividerMultipleLength + "d | %d%n", divisionResult.getDividend(), divisionResult.getDivider()));
 		} else {
-			formattedResult.append(String.format("_%" + dividendLength + "d | %d%n", divisionResult.getDividend(),
-					divisionResult.getDivider()));
+			formattedResult.append(String.format("_%" + dividendLength + "d | %d%n", divisionResult.getDividend(), divisionResult.getDivider()));
 		}
 		if (partialDividendLength > dividerMultipleLength) {
-			formattedResult.append(String.format(" %s%-" + (dividendLength - 1) + "d |--------%n", " ",
-					currentStep.getDividerMultiple()));
+			formattedResult.append(String.format(" %s%-" + (dividendLength - 1) + "d |--------%n", " ",	currentStep.getDividerMultiple()));
 		} else {
-			formattedResult
-					.append(String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
+			formattedResult.append(String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
 		}
-		formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n",
-				countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
+		formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n", countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
 		return formattedResult.toString();
 	}
 
@@ -61,21 +56,17 @@ public class DivisionFormatter {
 			if (currentStep.getPartialDividend() != 0 && currentStep.getDividerMultiple() != 0) {
 				formattedResult.append(String.format("%s_%s%n", indent.toString(), currentStep.getPartialDividend()));
 				if (partialDividentLength > dividerMultipleLength) {
-					formattedResult.append(
-							String.format("%s%s% d%n", indent.toString(), " ", currentStep.getDividerMultiple()));
+					formattedResult.append(String.format("%s%s% d%n", indent.toString(), " ", currentStep.getDividerMultiple()));
 				} else {
-					formattedResult
-							.append(String.format("%s% d%n", indent.toString(), currentStep.getDividerMultiple()));
+					formattedResult.append(String.format("%s% d%n", indent.toString(), currentStep.getDividerMultiple()));
 				}
-				formattedResult.append(
-						String.format(" %s%s%n", indent.toString(), countDashes(currentStep.getPartialDividend())));
+				formattedResult.append(String.format(" %s%s%n", indent.toString(), countDashes(currentStep.getPartialDividend())));
 				indent.append(countIndents(stepsIterator));
 			}
 			resultSize--;
 		}
 		if (currentStep != null) {
-			formattedResult.append(String.format("%s% d", indent.toString(),
-					(currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
+			formattedResult.append(String.format("%s% d", indent.toString(),(currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
 		}
 		return formattedResult.toString();
 	}
@@ -108,44 +99,6 @@ public class DivisionFormatter {
 		return partialDividentLengthDiff != 0
 				? partialDividentLength - ((long) (Math.log10(partialDividentLengthDiff) + 1))
 				: partialDividentLength;
-	}
-
-	private String findDecimalPeriod(double result) {
-		int beginIndex = 0;
-		String[] resultParts = String.valueOf(result).split("\\.");
-		String integerResult = resultParts[0];
-		String decimalResult = resultParts[1];
-		while (countPeriod(decimalResult.substring(beginIndex)) == decimalResult.substring(beginIndex).length()) {
-			beginIndex++;
-		}
-		int offset = countPeriod(decimalResult.substring(beginIndex));
-		if ((offset == 1 && decimalResult.length() < 10) || beginIndex == decimalResult.length()) {
-			return String.valueOf(result);
-		} else {
-			return String.format(integerResult + "." + decimalResult.substring(0, beginIndex) + "("
-					+ decimalResult.substring(beginIndex, beginIndex + offset) + ")");
-		}
-	}
-
-	private int countPeriod(String inputString) {
-		int period;
-		String[] digits = inputString.split("");
-		period = digits.length;
-		for (int i = 1; i <= (digits.length / 2); i++) {
-			int j;
-			for (j = 0; j < digits.length - i;) {
-				if (digits[j].equals(digits[j + i])) {
-					j++;
-				} else {
-					break;
-				}
-			}
-			if (j == (digits.length - i)) {
-				period = i;
-				break;
-			}
-		}
-		return period;
 	}
 
 	private int getResultSize(String result) {
