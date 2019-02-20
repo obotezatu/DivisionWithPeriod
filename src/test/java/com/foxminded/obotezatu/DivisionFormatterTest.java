@@ -42,7 +42,7 @@ public class DivisionFormatterTest {
 				.append("     _20").append(lineSeparator())
 				.append("      20").append(lineSeparator())
 				.append("      --").append(lineSeparator())
-				.append("        0");
+				.append("       0");
 		assertEquals(expected.toString(), divisionFormatter.format(division.divide(78945, 4)));
 	}
 
@@ -51,7 +51,7 @@ public class DivisionFormatterTest {
 		expected.append("_10000 | 10").append(lineSeparator())
 				.append(" 10    |--------").append(lineSeparator())
 				.append(" --    | 1000").append(lineSeparator())
-				.append("   0");
+				.append("  0");
 		assertEquals(expected.toString(), divisionFormatter.format(division.divide(10000, 10)));
 	}
 
@@ -75,7 +75,7 @@ public class DivisionFormatterTest {
 				.append("   _1000").append(lineSeparator())
 				.append("    1000").append(lineSeparator())
 				.append("    ----").append(lineSeparator())
-				.append("        0");
+				.append("       0");
 		assertEquals(expected.toString(), divisionFormatter.format(division.divide(1236, 125)));
 	}
 
@@ -89,7 +89,7 @@ public class DivisionFormatterTest {
 				.append("  _40").append(lineSeparator())
 				.append("   36").append(lineSeparator())
 				.append("   --").append(lineSeparator())
-				.append("    4");
+				.append("   4");
 		assertEquals(expected.toString(), divisionFormatter.format(division.divide(7, 12)));
 	}
 

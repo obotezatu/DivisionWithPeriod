@@ -1,6 +1,8 @@
 package com.foxminded.obotezatu;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class Division {
 
@@ -11,9 +13,9 @@ public class Division {
 		DivisionResult divisionResult = new DivisionResult();
 		divisionResult.setDividend(dividend);
 		divisionResult.setDivider(divider);
-		long integerPart = dividend / divider;
 		long[] dividendDigits = splitDividend(dividend);
 		long partialDividend = 0;
+
 		for (long digit : dividendDigits) {
 			partialDividend = partialDividend * 10 + digit;
 			long dividerMultiple = (partialDividend / divider) * divider;
@@ -21,41 +23,49 @@ public class Division {
 			if (dividerMultiple != 0 || digit == dividendDigits[dividendDigits.length - 1]) {
 				divisionStep.setPartialDividend(partialDividend);
 				divisionStep.setDividerMultiple(dividerMultiple);
+				divisionStep.setDivideResult(partialDividend / divider);
 			}
 			partialDividend = partialDividend - dividerMultiple;
 			divisionResult.getSteps().add(divisionStep);
 		}
-		String result = "";
 		HashMap<Long, Integer> multiples = new HashMap<>();
 		int i = 0;
 		multiples.put(partialDividend, i);
 		i++;
 		while (true) {
 			Step divisionStep = new Step();
+			divisionStep.isIntegerPart = false;
 			if (partialDividend == 0 || i > 10) {
-				if ("".equals(result)) {
-					divisionResult.setResult(String.format("%d", integerPart));
-				} else {
-					divisionResult.setResult(String.format("%d.%s", integerPart, result));
-				}
-				divisionStep.setPartialDividend(partialDividend);
+				divisionResult.setResult(divisionResult.getSteps());
 				return divisionResult;
 			}
 			divisionStep.setPartialDividend(partialDividend * 10);
 			divisionStep.setDividerMultiple(((partialDividend * 10) / divider) * divider);
-			divisionResult.getSteps().add(divisionStep);
 			long digit = (partialDividend * 10) / divider;
+			divisionStep.setDivideResult(digit);
 			partialDividend = (partialDividend * 10) % divider;
-			result += digit;
 			if (!multiples.containsKey(partialDividend)) {
 				multiples.put(partialDividend, i);
 				i++;
 			} else {
-				int val = multiples.get(partialDividend);
-				divisionResult.setResult(
-						String.format("%d.%s(%s)", integerPart, result.substring(0, val), result.substring(val)));
+				divisionResult.getSteps().add(divisionStep);
+				List<Step> steps = divisionResult.getSteps();
+				Iterator<Step> iterator = steps.iterator();
+				int periodStart = 0;
+				while (iterator.hasNext()) {
+					Step step = (Step) iterator.next();
+					if (step.getPartialDividend() == partialDividend * 10) {
+						periodStart = steps.indexOf(step);
+						break;
+					}
+				}
+				for (int j = periodStart; j < steps.size(); j++) {
+					steps.get(j).isPeriod = true;
+				}
+				divisionResult.setResult(divisionResult.getSteps());
 				return divisionResult;
 			}
+			divisionResult.getSteps().add(divisionStep);
 		}
 	}
 

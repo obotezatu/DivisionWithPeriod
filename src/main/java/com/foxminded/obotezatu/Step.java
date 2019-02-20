@@ -5,6 +5,8 @@ public class Step {
 	private long partialDividend;
 	private long divideResult;
 	private long dividerMultiple;
+	boolean isIntegerPart = true;
+	boolean isPeriod = false;
 
 	public long getDivideResult() {
 		return divideResult;

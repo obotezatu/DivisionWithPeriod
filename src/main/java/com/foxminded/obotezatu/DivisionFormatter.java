@@ -1,8 +1,7 @@
 package com.foxminded.obotezatu;
 
+import java.util.List;
 import java.util.ListIterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DivisionFormatter {
 
@@ -29,16 +28,21 @@ public class DivisionFormatter {
 				? (int) Math.log10(currentStep.getDividerMultiple()) + 1
 				: 1;
 		if (dividendLength < dividerMultipleLength) {
-			formattedResult.append(String.format("_%-" + dividerMultipleLength + "d | %d%n", divisionResult.getDividend(), divisionResult.getDivider()));
+			formattedResult.append(String.format("_%-" + dividerMultipleLength + "d | %d%n",
+					divisionResult.getDividend(), divisionResult.getDivider()));
 		} else {
-			formattedResult.append(String.format("_%" + dividendLength + "d | %d%n", divisionResult.getDividend(), divisionResult.getDivider()));
+			formattedResult.append(String.format("_%" + dividendLength + "d | %d%n", divisionResult.getDividend(),
+					divisionResult.getDivider()));
 		}
 		if (partialDividendLength > dividerMultipleLength) {
-			formattedResult.append(String.format(" %s%-" + (dividendLength - 1) + "d |--------%n", " ",	currentStep.getDividerMultiple()));
+			formattedResult.append(String.format("%s%-" + (dividendLength - 1) + "d |--------%n", " ",
+					currentStep.getDividerMultiple()));
 		} else {
-			formattedResult.append(String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
+			formattedResult
+					.append(String.format(" %-" + dividendLength + "d |--------%n", currentStep.getDividerMultiple()));
 		}
-		formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n", countDashes(currentStep.getPartialDividend()), divisionResult.getResult()));
+		formattedResult.append(String.format(" %-" + dividendLength + "s | %s%n",
+				countDashes(currentStep.getDividerMultiple()), formatResult(divisionResult.getSteps())));
 		return formattedResult.toString();
 	}
 
@@ -47,8 +51,7 @@ public class DivisionFormatter {
 		StringBuilder indent = new StringBuilder(countIndents(stepsIntegerIterator));
 		ListIterator<Step> stepsIterator = null;
 		Step currentStep = null;
-		int resultSize = getResultSize(divisionResult.getResult());
-		while (stepsIntegerIterator.hasNext() && resultSize > 0) {
+		while (stepsIntegerIterator.hasNext()) {
 			currentStep = stepsIntegerIterator.next();
 			stepsIterator = stepsIntegerIterator;
 			int partialDividentLength = String.valueOf(currentStep.getPartialDividend()).length();
@@ -56,17 +59,20 @@ public class DivisionFormatter {
 			if (currentStep.getPartialDividend() != 0 && currentStep.getDividerMultiple() != 0) {
 				formattedResult.append(String.format("%s_%s%n", indent.toString(), currentStep.getPartialDividend()));
 				if (partialDividentLength > dividerMultipleLength) {
-					formattedResult.append(String.format("%s%s% d%n", indent.toString(), " ", currentStep.getDividerMultiple()));
+					formattedResult.append(
+							String.format("%s%s% d%n", indent.toString(), " ", currentStep.getDividerMultiple()));
 				} else {
-					formattedResult.append(String.format("%s% d%n", indent.toString(), currentStep.getDividerMultiple()));
+					formattedResult
+							.append(String.format("%s% d%n", indent.toString(), currentStep.getDividerMultiple()));
 				}
-				formattedResult.append(String.format(" %s%s%n", indent.toString(), countDashes(currentStep.getPartialDividend())));
+				formattedResult.append(
+						String.format(" %s%s%n", indent.toString(), countDashes(currentStep.getPartialDividend())));
 				indent.append(countIndents(stepsIterator));
 			}
-			resultSize--;
 		}
 		if (currentStep != null) {
-			formattedResult.append(String.format("%s% d", indent.toString(),(currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
+			formattedResult.append(String.format("%s%d", indent.toString(),
+					(currentStep.getPartialDividend() - currentStep.getDividerMultiple())));
 		}
 		return formattedResult.toString();
 	}
@@ -101,15 +107,35 @@ public class DivisionFormatter {
 				: partialDividentLength;
 	}
 
-	private int getResultSize(String result) {
-
-		String resultSize = "";
-		Pattern pattern = Pattern.compile("\\d+");
-		Matcher matcher = pattern.matcher(result);
-
-		while (matcher.find()) {
-			resultSize += matcher.group();
+	private String formatResult(List<Step> steps) {
+		StringBuilder result = new StringBuilder();
+		String integerPart = "";
+		String decimalPart = "";
+		String periodPart = "";
+		long integer = 0;
+		long decimal = 0;
+		long period = 0;
+		for (int i = 0; i < steps.size(); i++) {
+			if (steps.get(i).isIntegerPart) {
+				integer = integer * 10 + steps.get(i).getDivideResult();
+				integerPart = String.valueOf(integer);
+			} else if (!steps.get(i).isPeriod) {
+				decimal = decimal * 10 + steps.get(i).getDivideResult();
+				decimalPart = String.valueOf(decimal);
+			} else {
+				period = period * 10 + steps.get(i).getDivideResult();
+				periodPart = String.valueOf(period);
+			}
 		}
-		return resultSize.length();
+		if ("".equals(periodPart)) {
+			if ("".equals(decimalPart)) {
+				result.append(integerPart);
+			} else {
+				result.append(integerPart).append(".").append(decimalPart);
+			}
+		} else {
+			result.append(integerPart).append(".").append(decimalPart).append("(").append(periodPart).append(")");
+		}
+		return result.toString();
 	}
 }

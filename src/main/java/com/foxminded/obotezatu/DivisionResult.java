@@ -8,7 +8,7 @@ public class DivisionResult {
 	private long dividend;
 	private long divider;
 	private List<Step> steps = new ArrayList<>();
-	private String result;
+	private double result;
 
 	public long getDividend() {
 		return dividend;
@@ -34,11 +34,22 @@ public class DivisionResult {
 		this.steps = steps;
 	}
 
-	public void setResult(String result) {
-		this.result = result;
+	public void setResult(List<Step> steps) {
+		long integer = 0;
+		long decimal = 0;
+		long decimalCount = 1;
+		for (int i = 0; i < steps.size(); i++) {
+			if (steps.get(i).isIntegerPart) {
+				integer = integer * 10 + steps.get(i).getDivideResult();
+			} else {
+				decimal = decimal * 10 + steps.get(i).getDivideResult();
+				decimalCount *= 10;
+			}
+		}
+		this.result = integer + ((double) decimal / decimalCount);
 	}
 
-	public String getResult() {
+	public double getResult() {
 		return result;
 	}
 }
